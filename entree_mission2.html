@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>L'ENTRÉE 2</title>
+    <title>Mission Secrète - L'Entrée 2</title>
     <style>
         * {
             box-sizing: border-box;
@@ -136,13 +136,23 @@
             overflow: hidden;
         }
 
-        /* Pièce 1 : Découpe CSS dynamique de rose.jpg */
+        /* Style de base pour les pièces débloquées */
         .puzzle-slot.unlocked {
             border: 2px solid #3b82f6;
             background-image: url('https://jeuagentsecret.github.io/JeuAgentSecret/Images/rose.jpg');
             background-size: 200% 400%; /* Grille 2x4 */
-            background-position: 0% 0%;   /* Coin Haut-Gauche */
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* MÉLANGE DES PIÈCES (Positions CSS dans le mauvais ordre) */
+        /* Dans la case 1, on affiche le bas-droit de l'image */
+        .puzzle-slot.piece-scrambled-1 {
+            background-position: 100% 100%;
+        }
+
+        /* Dans la case 2, on affiche le milieu de l'image, etc. */
+        .puzzle-slot.piece-scrambled-2 {
+            background-position: 0% 66.66%;
         }
 
         .puzzle-slot.locked {
@@ -172,13 +182,13 @@
 
     <div class="container">
         <div class="header">
-            <span class="badge">ZONE 2 / 8</span>
-            <h1>LA CUISINE</h1>
+            <span class="badge">ZONE 1 / 8</span>
+            <h1>L'ENTRÉE 2</h1>
         </div>
 
         <!-- Audio Player -->
         <div class="audio-card">
-            <div class="audio-title">🎙️ BRIEFING VOCAL - ZONE 2</div>
+            <div class="audio-title">🎙️ BRIEFING VOCAL - ZONE 1</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
                 ▶️ ÉCOUTER LE BRIEFING
             </button>
@@ -190,13 +200,16 @@
 
         <!-- Plateau de Puzzle (2 x 4) -->
         <div class="puzzle-grid">
-            <!-- Case 1 : Pièce 1 Débloquée -->
-            <div class="puzzle-slot unlocked">
+            <!-- Cases débloquées avec images mélangées -->
+            <div class="puzzle-slot unlocked piece-scrambled-1">
                 <span class="slot-number">1</span>
             </div>
+            
+            <div class="puzzle-slot unlocked piece-scrambled-2">
+                <span class="slot-number">2</span>
+            </div>
 
-            <!-- Cases 2 à 8 : Verrouillées -->
-            <div class="puzzle-slot locked"><span class="slot-number">2</span>🔒</div>
+            <!-- Cases 3 à 8 : Verrouillées pour l'instant -->
             <div class="puzzle-slot locked"><span class="slot-number">3</span>🔒</div>
             <div class="puzzle-slot locked"><span class="slot-number">4</span>🔒</div>
             <div class="puzzle-slot locked"><span class="slot-number">5</span>🔒</div>
