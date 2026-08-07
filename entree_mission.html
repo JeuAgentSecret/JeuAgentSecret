@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mission Secrète - Étape 2</title>
+    <title>Mission Secrète - L'Entrée</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: sans-serif;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -23,9 +23,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.5) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.4) 0px, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.5) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.4) 0px, transparent 50%);
         }
 
         .container {
@@ -49,9 +47,9 @@
 
         .badge {
             display: inline-block;
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
             padding: 4px 14px;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -112,59 +110,136 @@
             transform: scale(0.95);
         }
 
-        /* Puzzle Grid (2 colonnes x 4 lignes) */
-        .puzzle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(4, 110px);
-            gap: 8px;
+        .digicode-screen {
             background: #020617;
-            padding: 12px;
-            border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
         }
 
-        .puzzle-slot {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+        .digicode-screen.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .digicode-screen.success {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.15);
+        }
+
+        .code-dots {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .dot.filled {
+            background: #3b82f6;
+            border-color: #60a5fa;
+            box-shadow: 0 0 12px #3b82f6;
+        }
+
+        .digicode-screen.error .dot.filled {
+            background: #ef4444;
+            border-color: #f87171;
+            box-shadow: 0 0 12px #ef4444;
+        }
+
+        .digicode-screen.success .dot.filled {
+            background: #22c55e;
+            border-color: #4ade80;
+            box-shadow: 0 0 12px #22c55e;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .key {
+            aspect-ratio: 1.15;
+            background: rgba(51, 65, 85, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: #f8fafc;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.1s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Pièce 1 : Découpe CSS dynamique de rose.jpg */
-        .puzzle-slot.unlocked {
-            border: 2px solid #3b82f6;
-            background-image: url('https://jeuagentsecret.github.io/JeuAgentSecret/Images/rose.jpg');
-            background-size: 200% 400%; /* Grille 2x4 */
-            background-position: 0% 0%;   /* Coin Haut-Gauche */
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        .key:active {
+            transform: scale(0.92);
+            background: rgba(59, 130, 246, 0.4);
+            border-color: #3b82f6;
         }
 
-        .puzzle-slot.locked {
-            color: #64748b;
-            font-size: 1.5rem;
-        }
-
-        .slot-number {
-            position: absolute;
-            top: 6px;
-            left: 8px;
-            font-size: 0.65rem;
+        .key.action-btn {
+            font-size: 0.85rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .puzzle-slot.unlocked .slot-number {
-            color: #fff;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 6px;
-            border-radius: 6px;
-            z-index: 2;
+        .key.clear {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .key.enter {
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.15);
+        }
+
+        .result-card {
+            display: none;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(16, 185, 129, 0.15));
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .result-card h2 {
+            color: #4ade80;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .result-card p {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -172,51 +247,59 @@
 
     <div class="container">
         <div class="header">
-            <span class="badge">ZONE 2 / 8</span>
-            <h1>LA CUISINE</h1>
+            <span class="badge">ZONE 1 / 8</span>
+            <h1>L'ENTRÉE</h1>
         </div>
 
-        <!-- Audio Player -->
         <div class="audio-card">
-            <div class="audio-title">🎙️ BRIEFING VOCAL - ZONE 2</div>
+            <div class="audio-title">🎙️ BRIEFING VOCAL D'ACCÈS</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
                 ▶️ ÉCOUTER LE BRIEFING
             </button>
             <audio id="audio-player" preload="auto">
-                <source id="audio-source" src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/ENTREE2.mp3" type="audio/mpeg">
+                <source id="audio-source" src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/ENTREE.mp3" type="audio/mpeg">
                 Votre navigateur ne supporte pas l'élément audio.
             </audio>
         </div>
 
-        <!-- Plateau de Puzzle (2 x 4) -->
-        <div class="puzzle-grid">
-            <!-- Case 1 : Pièce 1 Débloquée -->
-            <div class="puzzle-slot unlocked">
-                <span class="slot-number">1</span>
+        <div class="digicode-screen" id="screen">
+            <div style="font-size: 0.75rem; color: #94a3b8; letter-spacing: 1px;">ENTREZ LE CODE SECRET</div>
+            <div class="code-dots">
+                <div class="dot" id="dot-0"></div>
+                <div class="dot" id="dot-1"></div>
+                <div class="dot" id="dot-2"></div>
+                <div class="dot" id="dot-3"></div>
             </div>
+        </div>
 
-            <!-- Cases 2 à 8 : Verrouillées -->
-            <div class="puzzle-slot locked"><span class="slot-number">2</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">3</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">4</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">5</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">6</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">7</span>🔒</div>
-            <div class="puzzle-slot locked"><span class="slot-number">8</span>🔒</div>
+        <div class="keypad">
+            <button class="key" onclick="pressKey('1')">1</button>
+            <button class="key" onclick="pressKey('2')">2</button>
+            <button class="key" onclick="pressKey('3')">3</button>
+            <button class="key" onclick="pressKey('4')">4</button>
+            <button class="key" onclick="pressKey('5')">5</button>
+            <button class="key" onclick="pressKey('6')">6</button>
+            <button class="key" onclick="pressKey('7')">7</button>
+            <button class="key" onclick="pressKey('8')">8</button>
+            <button class="key" onclick="pressKey('9')">9</button>
+            <button class="key action-btn clear" onclick="clearCode()">Effacer</button>
+            <button class="key" onclick="pressKey('0')">0</button>
+            <button class="key action-btn enter" onclick="checkCode()">OK</button>
+        </div>
+
+        <div class="result-card" id="result-card">
+            <h2>🔓 PORTE DÉVERROUILLÉE !</h2>
+            <p>Redirection vers l'étape suivante en cours...</p>
         </div>
     </div>
 
     <script>
+        const CORRECT_CODE = "0504";
+        const NEXT_PAGE_URL = "etape2.html"; 
+
+        let enteredCode = "";
         const audioPlayer = document.getElementById('audio-player');
         const btnPlay = document.getElementById('btn-play');
-
-        window.addEventListener('load', () => {
-            audioPlayer.play().then(() => {
-                btnPlay.innerHTML = "⏸️ PAUSE";
-            }).catch(err => {
-                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
-            });
-        });
 
         function toggleAudio() {
             if (audioPlayer.paused) {
@@ -234,6 +317,85 @@
         audioPlayer.onended = function() {
             btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
         };
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(freq = 440, type = 'sine', duration = 0.08) {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function playSuccessSound() {
+            setTimeout(() => playBeep(523, 'triangle', 0.1), 0);
+            setTimeout(() => playBeep(659, 'triangle', 0.1), 100);
+            setTimeout(() => playBeep(784, 'triangle', 0.2), 200);
+        }
+
+        function playErrorSound() {
+            setTimeout(() => playBeep(200, 'sawtooth', 0.15), 0);
+            setTimeout(() => playBeep(150, 'sawtooth', 0.25), 120);
+        }
+
+        function pressKey(num) {
+            if (enteredCode.length < 4) {
+                playBeep(600, 'sine', 0.05);
+                enteredCode += num;
+                updateDots();
+            }
+        }
+
+        function clearCode() {
+            playBeep(300, 'sine', 0.05);
+            enteredCode = "";
+            updateDots();
+            const screen = document.getElementById('screen');
+            screen.classList.remove('error', 'success');
+        }
+
+        function updateDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (i < enteredCode.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            }
+        }
+
+        function checkCode() {
+            const screen = document.getElementById('screen');
+            const resultCard = document.getElementById('result-card');
+
+            if (enteredCode === CORRECT_CODE) {
+                playSuccessSound();
+                screen.classList.remove('error');
+                screen.classList.add('success');
+                resultCard.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = NEXT_PAGE_URL;
+                }, 1800);
+            } else {
+                playErrorSound();
+                screen.classList.remove('success');
+                screen.classList.add('error');
+                setTimeout(() => {
+                    screen.classList.remove('error');
+                    clearCode();
+                }, 1000);
+            }
+        }
     </script>
 </body>
 </html>
