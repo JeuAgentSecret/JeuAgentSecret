@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KE DEFI FINAL</title>
+    <title>LE DEFI FINAL</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -175,7 +175,7 @@
             100% { box-shadow: 0 0 28px rgba(56, 189, 248, 1); }
         }
 
-        /* Modal Preview & Victory */
+        /* Modal Victory */
         .modal {
             display: none;
             position: fixed;
@@ -239,9 +239,6 @@
 
         <!-- Controls -->
         <div class="controls">
-            <button class="btn" id="previewBtn">
-                <i class="fa-solid fa-eye"></i> Modèle
-            </button>
             <button class="btn" id="shuffleBtn">
                 <i class="fa-solid fa-shuffle"></i> Mélanger
             </button>
@@ -254,15 +251,6 @@
         <!-- Puzzle Grid (8 Tiles - Grille 2x4) -->
         <div class="board-wrapper">
             <div class="puzzle-grid" id="puzzleGrid"></div>
-        </div>
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content">
-            <h2 style="color: #f8fafc;">Image Modèle</h2>
-            <img id="previewImg" src="" alt="Modèle">
-            <button class="btn" style="margin: 0 auto; background: var(--primary);" id="closePreview">Fermer</button>
         </div>
     </div>
 
@@ -295,9 +283,7 @@
 
         const puzzleGrid = document.getElementById('puzzleGrid');
         const moveCountDisplay = document.getElementById('moveCount');
-        const previewModal = document.getElementById('previewModal');
         const victoryModal = document.getElementById('victoryModal');
-        const previewImg = document.getElementById('previewImg');
         const victoryImg = document.getElementById('victoryImg');
 
         // Audio Effects (Web Audio API synth-based)
@@ -350,7 +336,6 @@
             moves = 0;
             selectedIndex = null;
             moveCountDisplay.innerText = moves;
-            previewImg.src = imageUrl;
             victoryImg.src = imageUrl;
 
             currentOrder = Array.from({ length: TOTAL_TILES }, (_, i) => i);
@@ -449,15 +434,12 @@
         }
 
         document.getElementById('shuffleBtn').addEventListener('click', initGame);
-        document.getElementById('previewBtn').addEventListener('click', () => previewModal.classList.add('active'));
-        document.getElementById('closePreview').addEventListener('click', () => previewModal.classList.remove('active'));
         document.getElementById('restartBtn').addEventListener('click', () => {
             victoryModal.classList.remove('active');
             initGame();
         });
 
         window.addEventListener('click', (e) => {
-            if (e.target === previewModal) previewModal.classList.remove('active');
             if (e.target === victoryModal) victoryModal.classList.remove('active');
         });
 
