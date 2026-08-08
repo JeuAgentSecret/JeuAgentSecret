@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mission Secrète - Zone 3 Débloquée</title>
+    <title>LA TERRASSE 2</title>
     <style>
         * {
             box-sizing: border-box;
@@ -164,10 +164,10 @@
         <div class="audio-card">
             <div class="audio-title">🎙️ TRANSMISSION : SUCCÈS TERRASSE</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
-                ▶️ ÉCOUTER LE MESSAGE
+                ▶️ ÉCOUTER LE BRIEFING
             </button>
             <audio id="audio-player" preload="auto">
-                <source src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/TERRASSE_BRAVO.mp3" type="audio/mpeg">
+                <source src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/TERRASSE2.mp3" type="audio/mpeg">
             </audio>
         </div>
 
@@ -192,7 +192,7 @@
             audioPlayer.play().then(() => {
                 btnPlay.innerHTML = "⏸️ PAUSE";
             }).catch(err => {
-                btnPlay.innerHTML = "▶️ ÉCOUTER LE MESSAGE";
+                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
             });
         });
 
@@ -202,7 +202,7 @@
                 btnPlay.innerHTML = "⏸️ PAUSE";
             } else {
                 audioPlayer.pause();
-                btnPlay.innerHTML = "▶️ ÉCOUTER LE MESSAGE";
+                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
             }
         }
     </script>
