@@ -99,7 +99,6 @@
             outline: none;
         }
 
-        /* Cadre du miroir / Canvas */
         .mirror-box {
             position: relative;
             width: 100%;
@@ -113,7 +112,6 @@
             justify-content: center;
         }
 
-        /* Bouton biométrique caché derrière la buée */
         .scanner-btn {
             background: rgba(59, 130, 246, 0.2);
             border: 2px solid #3b82f6;
@@ -142,7 +140,6 @@
             text-transform: uppercase;
         }
 
-        /* Canvas de buée en premier plan */
         #fogCanvas {
             position: absolute;
             top: 0;
@@ -167,12 +164,11 @@
     <div class="container">
         <div class="header">
             <span class="badge">ZONE 5 / 8</span>
-            <h1>SALLE DE BAIN</h1>
+            <h1>LA SALLE DE BAIN</h1>
         </div>
 
-        <!-- Briefing Audio -->
         <div class="audio-card">
-            <div class="audio-title">🎙️ BRIEFING VOCAL - SALLE DE BAIN</div>
+            <div class="audio-title">🎙️ BRIEFING VOCAL - SDB</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
                 ▶️ ÉCOUTER LE BRIEFING
             </button>
@@ -183,7 +179,6 @@
 
         <div class="instruction" id="instruction-text">👈 NETTOYEZ LA BUÉE AVEC VOTRE DOIGT</div>
 
-        <!-- Zone du Miroir Buée -->
         <div class="mirror-box">
             <div class="scanner-btn" id="scan-trigger">
                 🖐️
@@ -194,7 +189,7 @@
     </div>
 
     <script>
-        const NEXT_PAGE_URL = "sdb_mission.html";
+        const NEXT_PAGE_URL = "sdb_mission2.html";
 
         const audioPlayer = document.getElementById('audio-player');
         const btnPlay = document.getElementById('btn-play');
@@ -209,23 +204,20 @@
             }
         }
 
-        // Gestion du Canvas d'essuyage de buée
         const canvas = document.getElementById('fogCanvas');
         const ctx = canvas.getContext('2d');
         const instructionText = document.getElementById('instruction-text');
         const scanTrigger = document.getElementById('scan-trigger');
         let isDrawing = false;
-        let isCleared = false;
+        let scratchCount = 0;
 
         function initCanvas() {
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             
-            // Dessine la couche de buée semi-transparente
             ctx.fillStyle = 'rgba(148, 163, 184, 0.92)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Texte d'eau sur le miroir
             ctx.font = 'bold 16px -apple-system, sans-serif';
             ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
             ctx.textAlign = 'center';
@@ -243,29 +235,15 @@
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(x, y, 35, 0, Math.PI * 2, false);
+            ctx.arc(x, y, 40, 0, Math.PI * 2, false);
             ctx.fill();
 
-            checkCleared();
-        }
+            scratchCount++;
 
-        function checkCleared() {
-            if (isCleared) return;
-            
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const pixels = imageData.data;
-            let transparentPixels = 0;
-
-            for (let i = 3; i < pixels.length; i += 16) {
-                if (pixels[i] === 0) transparentPixels++;
-            }
-
-            const totalSampled = pixels.length / 16;
-            if (transparentPixels / totalSampled > 0.15) {
-                isCleared = true;
+            if (scratchCount > 5) {
                 instructionText.textContent = "✅ SCANNER DÉGAGÉ ! APPUYEZ SUR L'EMPREINTE";
                 instructionText.style.color = "#22c55e";
-                canvas.style.display = 'none'; // Disparition immédiate et définitive du canvas
+                canvas.style.display = 'none';
             }
         }
 
@@ -277,11 +255,7 @@
         canvas.addEventListener('touchmove', scratch, {passive: true});
         canvas.addEventListener('touchend', () => isDrawing = false);
 
-        // Gestion du clic/toucher sur le bouton de scan une fois dégagé
         function validateScan(e) {
-            if (!isCleared) {
-                return;
-            }
             window.location.href = NEXT_PAGE_URL + "?v=" + new Date().getTime();
         }
 
