@@ -99,7 +99,6 @@
             outline: none;
         }
 
-        /* Radio Tuner Box */
         .radio-box {
             background: #020617;
             border: 1px solid rgba(148, 163, 184, 0.2);
@@ -181,7 +180,6 @@
             <h1>CHAMBRE D'AMI</h1>
         </div>
 
-        <!-- Briefing Audio -->
         <div class="audio-card">
             <div class="audio-title">🎙️ BRIEFING VOCAL - CHAMBRE D'AMI</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
@@ -192,7 +190,6 @@
             </audio>
         </div>
 
-        <!-- Mini-Jeu Radio -->
         <div class="radio-box">
             <div class="status-label" id="status-text">RECHERCHE DE FRÉQUENCE</div>
             <div class="freq-display" id="freq-text">88.0 MHz</div>
@@ -201,7 +198,7 @@
                 <div class="signal-bar" id="signal-bar"></div>
             </div>
 
-            <input type="range" min="880" max="1080" value="880" class="slider-control" id="radio-slider" oninput="updateRadio(this.value)">
+            <input type="range" min="880" max="1080" value="880" class="slider-control" id="radio-slider">
         </div>
     </div>
 
@@ -222,6 +219,7 @@
             }
         }
 
+        const slider = document.getElementById('radio-slider');
         const freqText = document.getElementById('freq-text');
         const signalBar = document.getElementById('signal-bar');
         const statusText = document.getElementById('status-text');
@@ -229,16 +227,15 @@
         let holdTimer = 0;
         let isSuccess = false;
 
-        function updateRadio(val) {
+        function checkRadio() {
             if (isSuccess) return;
 
+            const val = parseInt(slider.value);
             const mhz = (val / 10).toFixed(1);
             freqText.textContent = `${mhz} MHz`;
 
-            // Calcul de la précision par rapport à la fréquence cible (104.2)
             const diff = Math.abs(val - TARGET_FREQ);
             const signalQuality = Math.max(0, 100 - (diff * 2.5));
-
             signalBar.style.width = `${signalQuality}%`;
 
             if (diff <= 2) {
@@ -247,7 +244,7 @@
                 statusText.style.color = "#22c55e";
                 
                 holdTimer++;
-                if (holdTimer >= 8) { // Stabilisation pendant ~1 seconde
+                if (holdTimer >= 60) { // Environ 1 seconde de maintien continu (à 60 images/sec)
                     isSuccess = true;
                     statusText.textContent = "🟢 FRÉQUENCE VALIDÉE !";
                     setTimeout(() => {
@@ -260,7 +257,12 @@
                 statusText.style.color = "#94a3b8";
                 holdTimer = 0;
             }
+
+            requestAnimationFrame(checkRadio);
         }
+
+        // Lancement de la boucle de vérification continue
+        requestAnimationFrame(checkRadio);
     </script>
 </body>
 </html>
