@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA MISSION FINALE</title>
+    <title>KE DEFI FINAL</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -227,10 +227,6 @@
             color: #4ade80;
             margin-bottom: 10px;
         }
-
-        input[type="file"] {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -238,7 +234,7 @@
     <div class="container">
         <header>
             <h1>L'Ultime Épreuve du Puzzle</h1>
-            <p>Interchange les 8 morceaux pour reconstituer l'image de la rose !</p>
+            <p>Interchange les 8 morceaux pour reconstituer l'image et découvrir ce qu'il s'y cache ! !</p>
         </header>
 
         <!-- Controls -->
@@ -249,10 +245,6 @@
             <button class="btn" id="shuffleBtn">
                 <i class="fa-solid fa-shuffle"></i> Mélanger
             </button>
-            <label for="imageUpload" class="btn">
-                <i class="fa-solid fa-image"></i> Changer l'image
-            </label>
-            <input type="file" id="imageUpload" accept="image/*">
 
             <div class="stat-badge">
                 Échanges : <span id="moveCount">0</span>
@@ -455,18 +447,6 @@
                 });
             }
         }
-
-        document.getElementById('imageUpload').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imageUrl = event.target.result;
-                    initGame();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
 
         document.getElementById('shuffleBtn').addEventListener('click', initGame);
         document.getElementById('previewBtn').addEventListener('click', () => previewModal.classList.add('active'));
