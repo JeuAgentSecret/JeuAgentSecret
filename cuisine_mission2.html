@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mission Secrète - Zone 2 Débloquée</title>
+    <title>LA CUISINE 2</title>
     <style>
         * {
             box-sizing: border-box;
@@ -166,7 +166,7 @@
         <div class="audio-card">
             <div class="audio-title">🎙️ TRANSMISSION : SUCCÈS CUISINE</div>
             <button class="play-btn" id="btn-play" onclick="toggleAudio()">
-                ▶️ ÉCOUTER LE MESSAGE
+                ▶️ ÉCOUTER LE BRIEFING
             </button>
             <audio id="audio-player" preload="auto">
                 <!-- Lien vers ton nouveau fichier vocal de confirmation -->
@@ -196,7 +196,7 @@
             audioPlayer.play().then(() => {
                 btnPlay.innerHTML = "⏸️ PAUSE";
             }).catch(err => {
-                btnPlay.innerHTML = "▶️ ÉCOUTER LE MESSAGE";
+                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
             });
         });
 
@@ -206,12 +206,12 @@
                 btnPlay.innerHTML = "⏸️ PAUSE";
             } else {
                 audioPlayer.pause();
-                btnPlay.innerHTML = "▶️ ÉCOUTER LE MESSAGE";
+                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
             }
         }
 
         audioPlayer.onended = function() {
-            btnPlay.innerHTML = "▶️ ÉCOUTER LE MESSAGE";
+            btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
         };
     </script>
 </body>
