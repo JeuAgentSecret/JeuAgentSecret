@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA CHAMBRE PRINCIPALE</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #game-area { position: relative; width: 100vw; height: 70vh; }
+        .target { position: absolute; width: 80px; height: 80px; background: radial-gradient(circle, #ef4444, #991b1b); border-radius: 50%; cursor: pointer; animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { from { transform: scale(0.9); } to { transform: scale(1.1); } }
+        .audio-card { margin-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="audio-card">
+        <h3>🎙️ RÉACTEUR INSTABLE</h3>
+        <button onclick="document.getElementById('intro').play()">▶️ ÉCOUTER BRIEFING</button>
+        <audio id="intro" src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/PRINCIPALE.mp3"></audio>
+    </div>
+    <div id="score">Cibles à neutraliser : <span id="count">5</span>/5</div>
+    <div id="game-area"></div>
+
+    <script>
+        let score = 5;
+        const area = document.getElementById('game-area');
+        
+        function spawnTarget() {
+            if (score <= 0) { window.location.href = 'PRINCIPALE2.html'; return; }
+            const t = document.createElement('div');
+            t.className = 'target';
+            t.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            t.style.top = Math.random() * (window.innerHeight - 300) + 'px';
+            t.onclick = () => { t.remove(); score--; document.getElementById('count').innerText = score; spawnTarget(); };
+            area.appendChild(t);
+            setTimeout(() => { if(t.parentElement) t.remove(); }, 1000);
+        }
+        spawnTarget();
+    </script>
+</body>
+</html>
