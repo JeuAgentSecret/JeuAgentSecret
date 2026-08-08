@@ -147,7 +147,6 @@
             width: 100%;
             height: 100%;
             z-index: 20;
-            cursor: pointer;
             touch-action: none;
         }
 
@@ -156,6 +155,7 @@
             color: #94a3b8;
             text-align: center;
             font-weight: 600;
+            min-height: 20px;
         }
     </style>
 </head>
@@ -205,11 +205,12 @@
         }
 
         const canvas = document.getElementById('fogCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const instructionText = document.getElementById('instruction-text');
         const scanTrigger = document.getElementById('scan-trigger');
         let isDrawing = false;
-        let scratchCount = 0;
+        let isCleared = false;
+        let scanInterval;
 
         function initCanvas() {
             canvas.width = canvas.offsetWidth;
@@ -235,34 +236,75 @@
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(x, y, 40, 0, Math.PI * 2, false);
+            ctx.arc(x, y, 35, 0, Math.PI * 2, false);
             ctx.fill();
+        }
 
-            scratchCount++;
+        // On vérifie UNIQUEMENT le centre du canvas (là où est le scanner) toutes les 500ms
+        function checkCenterCleared() {
+            if (isCleared) return;
 
-            if (scratchCount > 5) {
+            // Dimensions de la zone centrale à vérifier (autour du bouton scanner)
+            const checkSize = 60; 
+            const centerX = (canvas.width / 2) - (checkSize / 2);
+            const centerY = (canvas.height / 2) - (checkSize / 2);
+
+            const imageData = ctx.getImageData(centerX, centerY, checkSize, checkSize);
+            const pixels = imageData.data;
+            let transparentPixels = 0;
+
+            // On vérifie tous les pixels de ce petit carré central
+            for (let i = 3; i < pixels.length; i += 4) {
+                if (pixels[i] < 50) transparentPixels++; // Si l'alpha est très faible (effacé)
+            }
+
+            const totalPixels = pixels.length / 4;
+            
+            // Si la zone centrale est dégagée à 40% minimum
+            if (transparentPixels / totalPixels > 0.4) {
+                isCleared = true;
                 instructionText.textContent = "✅ SCANNER DÉGAGÉ ! APPUYEZ SUR L'EMPREINTE";
                 instructionText.style.color = "#22c55e";
-                canvas.style.display = 'none';
+                
+                // On laisse passer les clics à travers le canvas pour pouvoir cliquer sur le scanner en dessous
+                canvas.style.pointerEvents = 'none'; 
+                clearInterval(scanInterval);
             }
         }
 
-        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('mousedown', (e) => { 
+            isDrawing = true; 
+            scratch(e); 
+            scanInterval = setInterval(checkCenterCleared, 500); 
+        });
         canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
+        window.addEventListener('mouseup', () => { 
+            isDrawing = false; 
+            clearInterval(scanInterval);
+            checkCenterCleared(); 
+        });
 
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, {passive: true});
+        canvas.addEventListener('touchstart', (e) => { 
+            isDrawing = true; 
+            scratch(e); 
+            scanInterval = setInterval(checkCenterCleared, 500);
+        }, {passive: true});
         canvas.addEventListener('touchmove', scratch, {passive: true});
-        canvas.addEventListener('touchend', () => isDrawing = false);
+        window.addEventListener('touchend', () => { 
+            isDrawing = false; 
+            clearInterval(scanInterval);
+            checkCenterCleared(); 
+        });
 
-        function validateScan(e) {
+        // Validation lors du clic sur le scanner (possible uniquement quand pointer-events: none est activé sur le canvas)
+        function validateScan() {
             window.location.href = NEXT_PAGE_URL + "?v=" + new Date().getTime();
         }
 
         scanTrigger.addEventListener('click', validateScan);
         scanTrigger.addEventListener('touchend', (e) => {
             e.preventDefault();
-            validateScan(e);
+            validateScan();
         });
     </script>
 </body>
