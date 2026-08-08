@@ -98,6 +98,7 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
             outline: none;
+            width: 100%;
         }
 
         /* Zone de jeu intégrée */
@@ -132,13 +133,13 @@
 
         .target {
             position: absolute;
-            width: 70px;
-            height: 70px;
+            width: 42px;  /* Taille réduite */
+            height: 42px; /* Taille réduite */
             background: radial-gradient(circle, #ef4444, #991b1b);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
-            animation: pulse 0.5s infinite alternate;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+            animation: pulse 0.4s infinite alternate;
         }
 
         @keyframes pulse {
@@ -174,7 +175,7 @@
     </div>
 
     <script>
-        const NEXT_PAGE_URL = "PRINCIPALE2.html";
+        const NEXT_PAGE_URL = "principale_mission2.html";
         const TOTAL_TARGETS = 5;
         let score = TOTAL_TARGETS;
 
@@ -191,6 +192,10 @@
             }
         }
 
+        audioPlayer.onended = () => {
+            btnPlay.innerHTML = "▶️ ÉCOUTER BRIEFING";
+        };
+
         const area = document.getElementById('game-area');
         const countSpan = document.getElementById('count');
 
@@ -200,29 +205,32 @@
                 return;
             }
 
-            // Nettoyage de sécurité pour éviter l'accumulation de cibles orphelines
+            // Nettoyage de la cible précédente
             area.innerHTML = '';
 
             const t = document.createElement('div');
             t.className = 'target';
 
-            // Positionnement aléatoire sécurisé dans la zone dédiée
-            const maxX = area.clientWidth - 70;
-            const maxY = area.clientHeight - 70;
-            t.style.left = Math.max(0, Math.floor(Math.random() * maxX)) + 'px';
-            t.style.top = Math.max(0, Math.floor(Math.random() * maxY)) + 'px';
+            // Taille de la cible (42px) prise en compte pour éviter les dépassements
+            const targetSize = 42;
+            const maxX = Math.max(0, area.clientWidth - targetSize);
+            const maxY = Math.max(0, area.clientHeight - targetSize);
+            
+            // Position aléatoire sur toute la zone
+            t.style.left = Math.floor(Math.random() * maxX) + 'px';
+            t.style.top = Math.floor(Math.random() * maxY) + 'px';
 
-            // Clic sur la cible
+            // Clic réussi sur la cible
             t.onclick = () => {
                 score--;
                 countSpan.innerText = score;
                 t.remove();
-                spawnTarget(); // Génère immédiatement la suivante
+                spawnTarget();
             };
 
             area.appendChild(t);
 
-            // Sécurité si le joueur rate la cible : elle disparaît après 1.2s et une nouvelle apparaît pour ne jamais bloquer le jeu
+            // Disparition automatique après 1.2s si non cliquée pour relancer une nouvelle position
             setTimeout(() => {
                 if (t.parentElement) {
                     t.remove();
