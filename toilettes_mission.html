@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LES TOILETTES</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.5) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.4) 0px, transparent 50%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header { text-align: center; }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .audio-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .audio-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #93c5fd;
+            letter-spacing: 0.5px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            outline: none;
+        }
+
+        /* Target Zone Gyroscope */
+        .gyro-box {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: #020617;
+            border: 3px solid rgba(59, 130, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            touch-action: none;
+        }
+
+        .center-target {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px dashed #22c55e;
+            background: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .center-target.active {
+            background: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 15px #22c55e;
+        }
+
+        .ball {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #38bdf8, #0284c7);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+            top: 20px;
+            left: 20px;
+            transition: transform 0.05s linear;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .perm-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <span class="badge">ZONE 6 / 8</span>
+            <h1>LES TOILETTES</h1>
+        </div>
+
+        <!-- Briefing Audio -->
+        <div class="audio-card">
+            <div class="audio-title">🎙️ BRIEFING VOCAL - TOILETTES</div>
+            <button class="play-btn" id="btn-play" onclick="toggleAudio()">
+                ▶️ ÉCOUTER LE BRIEFING
+            </button>
+            <audio id="audio-player" preload="auto">
+                <source src="https://jeuagentsecret.github.io/JeuAgentSecret/Audios/TOILETTES.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div class="status-text" id="status">INCLINEZ LE TÉLÉPHONE</div>
+
+        <!-- Zone du Gyroscope -->
+        <div class="gyro-box" id="gyro-area">
+            <div class="center-target" id="target"></div>
+            <div class="ball" id="ball"></div>
+        </div>
+
+        <button class="perm-btn" id="perm-btn" onclick="requestGyro()">ACTIVER LE CAPTEUR</button>
+    </div>
+
+    <script>
+        const NEXT_PAGE_URL = "toilettes_mission2.html";
+
+        const audioPlayer = document.getElementById('audio-player');
+        const btnPlay = document.getElementById('btn-play');
+
+        function toggleAudio() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                btnPlay.innerHTML = "⏸️ PAUSE";
+            } else {
+                audioPlayer.pause();
+                btnPlay.innerHTML = "▶️ ÉCOUTER LE BRIEFING";
+            }
+        }
+
+        const ball = document.getElementById('ball');
+        const target = document.getElementById('target');
+        const status = document.getElementById('status');
+        const gyroBox = document.getElementById('gyro-area');
+
+        let posX = 20;
+        let posY = 20;
+        let holdTimer = 0;
+        let successTriggered = false;
+
+        const maxBounds = 212; // 240px - 28px de la bille
+
+        function updatePosition(x, y) {
+            posX = Math.max(0, Math.min(maxBounds, posX + x));
+            posY = Math.max(0, Math.min(maxBounds, posY + y));
+
+            ball.style.left = posX + 'px';
+            ball.style.top = posY + 'px';
+
+            checkCenter();
+        }
+
+        function checkCenter() {
+            if (successTriggered) return;
+
+            // Centre à environ (106, 106)
+            const dist = Math.hypot(posX - 106, posY - 106);
+
+            if (dist < 25) {
+                target.classList.add('active');
+                holdTimer++;
+                status.textContent = `STABILISATION... ${Math.round((holdTimer / 20) * 100)}%`;
+                status.style.color = "#22c55e";
+
+                if (holdTimer >= 20) { // ~1 à 2 secondes de maintien
+                    successTriggered = true;
+                    status.textContent = "🟢 PURGE EFFECTUÉE !";
+                    setTimeout(() => {
+                        window.location.href = NEXT_PAGE_URL + "?v=" + new Date().getTime();
+                    }, 600);
+                }
+            } else {
+                target.classList.remove('active');
+                holdTimer = 0;
+                status.textContent = "INCLINEZ LE TÉLÉPHONE";
+                status.style.color = "#94a3b8";
+            }
+        }
+
+        function handleOrientation(e) {
+            if (!e.gamma || !e.beta) return;
+            const x = e.gamma * 0.15; // Inclinaison gauche/droite
+            const y = (e.beta - 45) * 0.15; // Inclinaison avant/arrière ajustée
+            updatePosition(x, y);
+        }
+
+        function requestGyro() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(state => {
+                    if (state === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        document.getElementById('perm-btn').style.display = 'none';
+                    }
+                });
+            } else if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', handleOrientation);
+                document.getElementById('perm-btn').style.display = 'none';
+            }
+        }
+
+        // Secours tactile (Glisser la bille avec le doigt si le gyro est désactivé)
+        gyroBox.addEventListener('touchmove', (e) => {
+            const rect = gyroBox.getBoundingClientRect();
+            const touch = e.touches[0];
+            posX = touch.clientX - rect.left - 14;
+            posY = touch.clientY - rect.top - 14;
+            updatePosition(0, 0);
+        });
+
+        // Tenter d'activer le gyro au lancement
+        window.addEventListener('load', requestGyro);
+    </script>
+</body>
+</html>
